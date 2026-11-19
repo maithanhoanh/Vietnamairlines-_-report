@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Báo cáo chiến dịch Vietnam Airlines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f4f5f3; --surface:#ffffff; --border:#e4e4df; --grid:#ececE8;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#8a8984;
+  --brand:#0f8a3f; --brand-soft:#e6f4ea; --brand-ink:#0b5e2b;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --good:#0f8a3f; --bad:#c43c3b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111110; --surface:#1a1a19; --border:#2e2e2b; --grid:#2a2a28;
+    --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86;
+    --brand:#2fbf62; --brand-soft:#16301f; --brand-ink:#7fdc9d;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --good:#2fbf62; --bad:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111110; --surface:#1a1a19; --border:#2e2e2b; --grid:#2a2a28;
+  --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86;
+  --brand:#2fbf62; --brand-soft:#16301f; --brand-ink:#7fdc9d;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --good:#2fbf62; --bad:#e66767;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 "Be Vietnam Pro",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px 56px}
+header.top{background:var(--surface);border-bottom:1px solid var(--border)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.brand .dot{width:28px;height:28px;border-radius:8px;background:var(--brand);display:grid;place-items:center;color:#fff;font-size:13px}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.meta{color:var(--text-2);font-size:13px;text-align:right}
+.hero{padding:36px 0 8px}
+.eyebrow{display:inline-block;background:var(--brand-soft);color:var(--brand-ink);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+h1{font-size:30px;line-height:1.2;margin:12px 0 6px;letter-spacing:-.01em}
+.sub{color:var(--text-2);margin:0;max-width:760px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--text-2)}
+.chip b{color:var(--text);font-weight:600}
+h2{font-size:18px;margin:36px 0 14px;letter-spacing:-.005em}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.kpi .l{color:var(--text-2);font-size:13px}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .n{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi.hl{border-color:var(--brand);box-shadow:inset 3px 0 0 var(--brand)}
+.grid2{display:grid;grid-template-columns:3fr 2fr;gap:16px}
+.grid2.even{grid-template-columns:1fr 1fr}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 18px 14px;min-width:0}
+.card h3{font-size:15px;margin:0}
+.card p.d{margin:2px 0 12px;color:var(--muted);font-size:13px}
+.chart{position:relative;height:290px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 10px;font-size:13px;color:var(--text-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+tfoot td{font-weight:700;border-bottom:0}
+.tbl{overflow-x:auto}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:0}
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ins{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.ins .t{font-weight:600;margin-bottom:4px}
+.ins p{margin:0;color:var(--text-2);font-size:14px}
+.ins .tag{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--brand-ink)}
+ol.rec{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px 16px 38px;margin:0}
+ol.rec li{margin:6px 0;color:var(--text-2)}
+ol.rec li b{color:var(--text)}
+footer{margin-top:40px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);padding-top:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid2.even,.insights{grid-template-columns:1fr}}
+@media (max-width:420px){h1{font-size:24px}.kpi .v{font-size:22px}.meta{text-align:left}}
+@media print{body{background:#fff}.card,.kpi,.ins{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand"><div class="dot">CC</div><div>Cốc Cốc Ads<small>Báo cáo hiệu quả quảng cáo</small></div></div>
+  <div class="meta">Khách hàng: <b>Vietnam Airlines</b><br>Ngày lập: 19/11/2026</div>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow">Báo cáo kết thúc chiến dịch</span>
+    <h1 id="title">VNA – Săn vé Tết 2027</h1>
+    <p class="sub">Tổng kết hiệu quả chiến dịch quảng cáo của Vietnam Airlines trên hệ sinh thái Cốc Cốc (Search, Newtab, Skin, Newsfeed) giai đoạn mở bán vé Tết Nguyên đán 2027.</p>
+    <div class="chips">
+      <span class="chip">Thời gian: <b id="period"></b></span>
+      <span class="chip">Định dạng: <b>4</b></span>
+      <span class="chip">Thiết bị: <b>Desktop, Mobile</b></span>
+      <span class="chip">Mục tiêu: <b>Đặt vé trực tuyến</b></span>
+    </div>
+  </section>
+
+  <h2>Chỉ số tổng quan</h2>
+  <div class="kpis" id="kpis"></div>
+
+  <h2>Diễn biến theo ngày</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Lượt nhấp theo định dạng quảng cáo</h3>
+      <p class="d">Clicks mỗi ngày, 01–31/10/2026</p>
+      <div class="legend" id="lg-clicks"></div>
+      <div class="chart"><canvas id="c-clicks" aria-label="Biểu đồ lượt nhấp theo ngày"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Lượt đặt vé (chuyển đổi) theo ngày</h3>
+      <p class="d">Vùng tô đậm: Flash Sale 15–18/10</p>
+      <div class="chart" style="height:322px"><canvas id="c-conv" aria-label="Biểu đồ chuyển đổi theo ngày"></canvas></div>
+    </div>
+  </div>
+
+  <h2>Hiệu quả theo định dạng</h2>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>Phân bổ ngân sách</h3>
+      <p class="d">Chi phí (triệu VNĐ) theo định dạng</p>
+      <div class="chart" style="height:240px"><canvas id="c-spend"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>ROAS theo định dạng</h3>
+      <p class="d">Doanh thu đặt vé / chi phí quảng cáo (lần)</p>
+      <div class="chart" style="height:240px"><canvas id="c-roas"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Bảng chi tiết</h3>
+    <p class="d">Số liệu tổng hợp toàn chiến dịch</p>
+    <div class="tbl"><table id="tbl"></table></div>
+  </div>
+
+  <h2>Desktop &amp; Mobile</h2>
+  <div class="grid2 even">
+    <div class="card">
+      <h3>Tỷ trọng theo thiết bị</h3>
+      <p class="d">% đóng góp của mỗi thiết bị vào từng chỉ số</p>
+      <div class="legend" id="lg-dev"></div>
+      <div class="chart" style="height:220px"><canvas id="c-dev"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>So sánh hiệu quả</h3>
+      <p class="d">Chỉ số hiệu quả theo thiết bị</p>
+      <div class="tbl"><table id="tbl-dev"></table></div>
+    </div>
+  </div>
+
+  <h2>Nhận định chính</h2>
+  <div class="insights" id="insights"></div>
+
+  <h2>Đề xuất cho giai đoạn tiếp theo</h2>
+  <ol class="rec">
+    <li><b>Tăng 20–25% ngân sách Search Ads</b> trong giai đoạn cao điểm Tết (12/2026 – 01/2027): kênh có ROAS và tỷ lệ chuyển đổi cao nhất, đánh đúng nhu cầu “vé máy bay Tết”.</li>
+    <li><b>Lặp lại cơ chế Flash Sale</b> kết hợp Skin Ads + Newtab Banner để tạo độ phủ lớn trong 3–4 ngày, sau đó remarketing qua Native Newsfeed.</li>
+    <li><b>Tối ưu landing page trên Mobile</b>: tỷ lệ chuyển đổi Mobile thấp hơn Desktop, cần rút gọn bước đặt vé và tăng tốc độ tải trang.</li>
+    <li><b>Thử nghiệm A/B creative</b> cho Newtab Banner (hành trình nội địa vs. quốc tế) để cải thiện CTR.</li>
+  </ol>
+
+  <footer>
+    <span>© 2026 Cốc Cốc · Báo cáo được lập cho Vietnam Airlines · Nguồn: Cốc Cốc Ads Platform</span>
+    <span>Số liệu doanh thu dựa trên conversion tracking của khách hàng</span>
+  </footer>
+</main>
+
+<script type="text/csv" id="raw">
+date,campaign,ad_format,device,impressions,clicks,spend_vnd,conversions,revenue_vnd
+2026-10-01,VNA - Săn vé Tết 2027,Search Ads,Desktop,114712,4695,10652475,129,580236031
+2026-10-01,VNA - Săn vé Tết 2027,Search Ads,Mobile,70817,2993,6449723,90,324679004
+2026-10-01,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,380322,2722,10144823,29,115155179
+2026-10-01,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,249220,1390,7040451,19,61510763
+2026-10-01,VNA - Săn vé Tết 2027,Skin Ads,Desktop,592129,2183,12818734,17,69594432
+2026-10-01,VNA - Săn vé Tết 2027,Skin Ads,Mobile,330823,878,6984591,9,33408217
+2026-10-01,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,276395,3368,9708871,64,240504654
+2026-10-01,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,161261,1680,5711029,31,123705562
+2026-10-02,VNA - Săn vé Tết 2027,Search Ads,Desktop,117134,4821,10824942,137,502863691
+2026-10-02,VNA - Săn vé Tết 2027,Search Ads,Mobile,65284,2281,6064279,75,302226640
+2026-10-02,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,395807,2632,10824346,37,146844132
+2026-10-02,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,254494,1401,7289103,15,54938688
+2026-10-02,VNA - Săn vé Tết 2027,Skin Ads,Desktop,617736,2247,13667587,22,87346161
+2026-10-02,VNA - Săn vé Tết 2027,Skin Ads,Mobile,363885,1001,7630894,8,26793281
+2026-10-02,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,247392,3161,8984606,47,191847572
+2026-10-02,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,157570,1673,5492257,24,86485300
+2026-10-03,VNA - Săn vé Tết 2027,Search Ads,Desktop,128634,5604,12323596,201,818722171
+2026-10-03,VNA - Săn vé Tết 2027,Search Ads,Mobile,73512,3179,6990292,82,297608063
+2026-10-03,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,423057,3117,12191581,36,118887177
+2026-10-03,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,274591,1837,7710932,26,109493510
+2026-10-03,VNA - Săn vé Tết 2027,Skin Ads,Desktop,573297,2124,12841716,19,63615252
+2026-10-03,VNA - Săn vé Tết 2027,Skin Ads,Mobile,400402,1068,8751379,9,36811090
+2026-10-03,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,318797,3473,11158548,48,210373179
+2026-10-03,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,195198,1794,6926859,30,104814658
+2026-10-04,VNA - Săn vé Tết 2027,Search Ads,Desktop,134843,6288,13167007,197,703431956
+2026-10-04,VNA - Săn vé Tết 2027,Search Ads,Mobile,75761,2589,7506129,92,424846668
+2026-10-04,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,444833,2843,12926147,40,133105797
+2026-10-04,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,282761,1516,8123634,20,67527325
+2026-10-04,VNA - Săn vé Tết 2027,Skin Ads,Desktop,637417,2270,13693708,23,80890746
+2026-10-04,VNA - Săn vé Tết 2027,Skin Ads,Mobile,369985,1099,8326826,9,30569882
+2026-10-04,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,328543,3931,11427826,63,217764219
+2026-10-04,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,173132,1607,6113131,23,82171049
+2026-10-05,VNA - Săn vé Tết 2027,Search Ads,Desktop,105425,5023,9743900,181,842218449
+2026-10-05,VNA - Săn vé Tết 2027,Search Ads,Mobile,64613,2339,6241957,64,239149627
+2026-10-05,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,452705,3292,12641098,44,182624049
+2026-10-05,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,239429,1293,6657788,15,56436121
+2026-10-05,VNA - Săn vé Tết 2027,Skin Ads,Desktop,603017,2210,13908685,17,59412126
+2026-10-05,VNA - Săn vé Tết 2027,Skin Ads,Mobile,342041,1094,7335768,9,31900523
+2026-10-05,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,264875,2896,9038679,54,207007000
+2026-10-05,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,176838,1728,5911174,33,141674025
+2026-10-06,VNA - Săn vé Tết 2027,Search Ads,Desktop,127154,6475,12500841,174,727651960
+2026-10-06,VNA - Săn vé Tết 2027,Search Ads,Mobile,67170,2533,6099508,75,360861685
+2026-10-06,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,400078,3055,11151783,36,155568315
+2026-10-06,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,282785,1713,8090915,18,64228444
+2026-10-06,VNA - Săn vé Tết 2027,Skin Ads,Desktop,635737,2280,14045229,23,71799985
+2026-10-06,VNA - Săn vé Tết 2027,Skin Ads,Mobile,362247,1067,8250531,8,32781129
+2026-10-06,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,248471,2653,8779132,45,161558485
+2026-10-06,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,153611,1622,5239940,27,109071261
+2026-10-07,VNA - Săn vé Tết 2027,Search Ads,Desktop,115286,5433,10977122,198,757818585
+2026-10-07,VNA - Săn vé Tết 2027,Search Ads,Mobile,74925,2713,7043696,90,355319668
+2026-10-07,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,407593,3090,10924764,36,157256570
+2026-10-07,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,285082,1530,7753327,17,72996566
+2026-10-07,VNA - Săn vé Tết 2027,Skin Ads,Desktop,630529,2421,13690650,19,75248446
+2026-10-07,VNA - Săn vé Tết 2027,Skin Ads,Mobile,373718,1129,8622389,11,33752938
+2026-10-07,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,290760,3196,10342874,60,208327236
+2026-10-07,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,154690,1353,5442966,20,80453017
+2026-10-08,VNA - Săn vé Tết 2027,Search Ads,Desktop,123250,5289,11865925,148,619461419
+2026-10-08,VNA - Săn vé Tết 2027,Search Ads,Mobile,78258,3275,7131403,98,384024474
+2026-10-08,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,384159,2925,10903937,32,130400103
+2026-10-08,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,264110,1551,7032476,15,63551119
+2026-10-08,VNA - Săn vé Tết 2027,Skin Ads,Desktop,638258,2271,14511503,21,67618767
+2026-10-08,VNA - Săn vé Tết 2027,Skin Ads,Mobile,334980,940,7663591,9,35906029
+2026-10-08,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,297577,3197,10154325,43,181792648
+2026-10-08,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,181886,1717,6442823,24,105671058
+2026-10-09,VNA - Săn vé Tết 2027,Search Ads,Desktop,127720,6575,12510471,235,846289241
+2026-10-09,VNA - Săn vé Tết 2027,Search Ads,Mobile,76411,2833,7571776,98,456554626
+2026-10-09,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,456582,3081,13151684,31,130952374
+2026-10-09,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,282362,1576,8156433,19,67980434
+2026-10-09,VNA - Săn vé Tết 2027,Skin Ads,Desktop,630357,2073,13207278,16,54632366
+2026-10-09,VNA - Săn vé Tết 2027,Skin Ads,Mobile,391383,1281,8420243,12,41899831
+2026-10-09,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,304488,3547,11125178,48,213617698
+2026-10-09,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,159295,1709,5444564,23,87939110
+2026-10-10,VNA - Săn vé Tết 2027,Search Ads,Desktop,140508,6201,13490030,193,782681825
+2026-10-10,VNA - Săn vé Tết 2027,Search Ads,Mobile,83615,3040,8109272,75,355216853
+2026-10-10,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,488943,3680,14021643,47,171324986
+2026-10-10,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,271811,1689,7481478,19,79738010
+2026-10-10,VNA - Săn vé Tết 2027,Skin Ads,Desktop,701359,2350,15135626,20,69891848
+2026-10-10,VNA - Săn vé Tết 2027,Skin Ads,Mobile,394939,1058,8619536,11,41706537
+2026-10-10,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,338779,4021,11621245,66,218821346
+2026-10-10,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,183969,1747,6490416,30,115771085
+2026-10-11,VNA - Săn vé Tết 2027,Search Ads,Desktop,133841,5758,12680801,207,946609177
+2026-10-11,VNA - Săn vé Tết 2027,Search Ads,Mobile,77509,2696,7374732,88,351325673
+2026-10-11,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,520113,3942,14814809,42,145194341
+2026-10-11,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,271188,1522,7574384,21,69573507
+2026-10-11,VNA - Săn vé Tết 2027,Skin Ads,Desktop,665454,2415,14192641,23,82660328
+2026-10-11,VNA - Săn vé Tết 2027,Skin Ads,Mobile,393712,1202,8233383,12,46699798
+2026-10-11,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,291092,3301,9858006,62,243102655
+2026-10-11,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,176228,1599,6382833,25,106316435
+2026-10-12,VNA - Săn vé Tết 2027,Search Ads,Desktop,125913,6498,12075912,238,1116980806
+2026-10-12,VNA - Săn vé Tết 2027,Search Ads,Mobile,76352,3105,7256905,109,464374733
+2026-10-12,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,474891,3594,13263272,39,136962278
+2026-10-12,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,277065,1762,7774344,22,77946903
+2026-10-12,VNA - Săn vé Tết 2027,Skin Ads,Desktop,557674,1862,11988749,16,58293830
+2026-10-12,VNA - Săn vé Tết 2027,Skin Ads,Mobile,346347,953,7767416,9,28164304
+2026-10-12,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,279016,3255,9683308,46,175102124
+2026-10-12,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,188337,1856,6720679,34,143165352
+2026-10-13,VNA - Săn vé Tết 2027,Search Ads,Desktop,119823,4879,11214439,167,775772517
+2026-10-13,VNA - Săn vé Tết 2027,Search Ads,Mobile,82063,3109,7988947,98,424349629
+2026-10-13,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,418522,2790,11643424,27,97556067
+2026-10-13,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,281434,1644,7616202,19,64134418
+2026-10-13,VNA - Săn vé Tết 2027,Skin Ads,Desktop,628808,1962,13687165,18,55606863
+2026-10-13,VNA - Săn vé Tết 2027,Skin Ads,Mobile,386940,1039,8480075,8,27755457
+2026-10-13,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,269921,2988,9694024,45,188768317
+2026-10-13,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,187214,1700,6278534,22,86814646
+2026-10-14,VNA - Săn vé Tết 2027,Search Ads,Desktop,136056,6059,13119386,209,917763070
+2026-10-14,VNA - Săn vé Tết 2027,Search Ads,Mobile,79664,3410,7340553,85,319770149
+2026-10-14,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,413268,3075,11645526,33,132903872
+2026-10-14,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,288371,1586,8160983,21,70571916
+2026-10-14,VNA - Săn vé Tết 2027,Skin Ads,Desktop,657944,2574,13907500,19,64541362
+2026-10-14,VNA - Săn vé Tết 2027,Skin Ads,Mobile,392494,1282,8545630,13,40846990
+2026-10-14,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,299612,3566,10068956,63,271520114
+2026-10-14,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,180442,1584,6621040,28,104194395
+2026-10-15,VNA - Săn vé Tết 2027,Search Ads,Desktop,161335,7222,15335960,273,1266847024
+2026-10-15,VNA - Săn vé Tết 2027,Search Ads,Mobile,106787,3735,10612223,159,733653222
+2026-10-15,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,615573,4333,17639014,80,283031514
+2026-10-15,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,384596,2320,10750916,35,142217945
+2026-10-15,VNA - Săn vé Tết 2027,Skin Ads,Desktop,780490,2979,17738670,29,116352688
+2026-10-15,VNA - Săn vé Tết 2027,Skin Ads,Mobile,475904,1389,10585404,15,46364939
+2026-10-15,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,408727,4360,13893619,101,375032841
+2026-10-15,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,251885,2550,8618733,43,190242028
+2026-10-16,VNA - Săn vé Tết 2027,Search Ads,Desktop,150967,7343,14325483,326,1447494692
+2026-10-16,VNA - Săn vé Tết 2027,Search Ads,Mobile,103834,4003,10153185,135,519643547
+2026-10-16,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,617225,4207,17423246,65,249291315
+2026-10-16,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,358896,2272,9879048,38,134476099
+2026-10-16,VNA - Săn vé Tết 2027,Skin Ads,Desktop,782128,2502,16677851,25,90968327
+2026-10-16,VNA - Săn vé Tết 2027,Skin Ads,Mobile,530902,1444,11348585,17,65323380
+2026-10-16,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,420701,4887,14405010,85,301079993
+2026-10-16,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,222579,1984,7411773,42,152709658
+2026-10-17,VNA - Săn vé Tết 2027,Search Ads,Desktop,202992,9498,19664944,326,1520549121
+2026-10-17,VNA - Săn vé Tết 2027,Search Ads,Mobile,113427,4774,10855373,190,783748230
+2026-10-17,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,627252,4001,18337698,62,258367133
+2026-10-17,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,402200,2159,11407376,28,95202386
+2026-10-17,VNA - Săn vé Tết 2027,Skin Ads,Desktop,938674,3148,21670809,31,120453566
+2026-10-17,VNA - Săn vé Tết 2027,Skin Ads,Mobile,580257,1827,12415475,22,78024223
+2026-10-17,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,427655,5366,15701400,103,416285002
+2026-10-17,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,270962,2768,9908149,51,181656873
+2026-10-18,VNA - Săn vé Tết 2027,Search Ads,Desktop,192428,8158,17684369,273,975530395
+2026-10-18,VNA - Săn vé Tết 2027,Search Ads,Mobile,113142,4470,10524125,161,718183059
+2026-10-18,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,700612,4954,19984731,90,371531155
+2026-10-18,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,422975,2627,12356906,40,154032044
+2026-10-18,VNA - Săn vé Tết 2027,Skin Ads,Desktop,959757,3709,21804324,36,116611078
+2026-10-18,VNA - Săn vé Tết 2027,Skin Ads,Mobile,549383,1714,12170072,18,57497435
+2026-10-18,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,451458,5464,16500504,114,443772406
+2026-10-18,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,244264,2099,8491129,41,147925148
+2026-10-19,VNA - Săn vé Tết 2027,Search Ads,Desktop,117850,6048,11571880,193,920222207
+2026-10-19,VNA - Săn vé Tết 2027,Search Ads,Mobile,86519,3481,8029859,88,398015087
+2026-10-19,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,460715,3413,13436754,36,140301927
+2026-10-19,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,291707,1740,7833931,20,72199431
+2026-10-19,VNA - Săn vé Tết 2027,Skin Ads,Desktop,663534,2536,14349299,25,84281880
+2026-10-19,VNA - Săn vé Tết 2027,Skin Ads,Mobile,428318,1355,9470202,12,40796142
+2026-10-19,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,288875,3713,10013739,60,268265968
+2026-10-19,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,189327,1847,6568958,26,97195328
+2026-10-20,VNA - Săn vé Tết 2027,Search Ads,Desktop,135900,6467,13246160,177,754376963
+2026-10-20,VNA - Săn vé Tết 2027,Search Ads,Mobile,86006,3273,8332551,86,412470188
+2026-10-20,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,476972,3196,12898972,39,150523097
+2026-10-20,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,262831,1757,7663154,21,70642139
+2026-10-20,VNA - Săn vé Tết 2027,Skin Ads,Desktop,689286,2425,15492755,22,73816575
+2026-10-20,VNA - Săn vé Tết 2027,Skin Ads,Mobile,422670,1387,9060442,13,45165547
+2026-10-20,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,327079,3785,11882008,69,251036452
+2026-10-20,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,195592,1850,7142994,30,128251286
+2026-10-21,VNA - Săn vé Tết 2027,Search Ads,Desktop,124545,5475,11934637,204,854137154
+2026-10-21,VNA - Săn vé Tết 2027,Search Ads,Mobile,74191,2893,6938986,92,391434412
+2026-10-21,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,465967,3189,12640858,41,159155821
+2026-10-21,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,272810,1739,7290086,23,92781075
+2026-10-21,VNA - Săn vé Tết 2027,Skin Ads,Desktop,691545,2367,15463026,24,98862806
+2026-10-21,VNA - Săn vé Tết 2027,Skin Ads,Mobile,398627,1043,8771803,10,39992763
+2026-10-21,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,326535,3717,11458383,58,241295038
+2026-10-21,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,182847,1831,6178448,29,129020079
+2026-10-22,VNA - Săn vé Tết 2027,Search Ads,Desktop,126896,6133,12235749,217,1007737168
+2026-10-22,VNA - Săn vé Tết 2027,Search Ads,Mobile,86146,3232,8033827,109,493426244
+2026-10-22,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,508791,3232,13631313,41,175474226
+2026-10-22,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,319098,2021,8875749,20,79049450
+2026-10-22,VNA - Săn vé Tết 2027,Skin Ads,Desktop,704506,2446,15799816,26,80851426
+2026-10-22,VNA - Săn vé Tết 2027,Skin Ads,Mobile,425651,1190,9247119,9,32702936
+2026-10-22,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,310004,3831,10492067,51,221027998
+2026-10-22,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,192019,1739,6998113,24,92509089
+2026-10-23,VNA - Săn vé Tết 2027,Search Ads,Desktop,125562,5460,11343180,190,894049536
+2026-10-23,VNA - Săn vé Tết 2027,Search Ads,Mobile,83815,2972,7916027,86,370689269
+2026-10-23,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,490134,3440,13380793,47,162484046
+2026-10-23,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,285542,1700,7785067,21,81590997
+2026-10-23,VNA - Săn vé Tết 2027,Skin Ads,Desktop,725364,2427,16720712,23,77198092
+2026-10-23,VNA - Săn vé Tết 2027,Skin Ads,Mobile,410036,1260,9241502,9,33434271
+2026-10-23,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,307938,3901,10547393,70,281768623
+2026-10-23,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,183281,1828,6492384,31,128913072
+2026-10-24,VNA - Săn vé Tết 2027,Search Ads,Desktop,153690,7677,14787799,276,1210091410
+2026-10-24,VNA - Săn vé Tết 2027,Search Ads,Mobile,87802,3344,8407564,113,416243190
+2026-10-24,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,515829,3907,13974732,40,153796993
+2026-10-24,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,360749,2173,10518634,30,105688376
+2026-10-24,VNA - Săn vé Tết 2027,Skin Ads,Desktop,793106,2779,17983103,27,92496936
+2026-10-24,VNA - Săn vé Tết 2027,Skin Ads,Mobile,421324,1378,8936141,15,59834277
+2026-10-24,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,363132,4677,13303502,84,314408371
+2026-10-24,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,225396,1923,7917711,30,123066276
+2026-10-25,VNA - Săn vé Tết 2027,Search Ads,Desktop,155160,7313,15215449,267,989639795
+2026-10-25,VNA - Săn vé Tết 2027,Search Ads,Mobile,87035,2979,8586022,95,448706132
+2026-10-25,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,511448,3273,14784322,46,164426852
+2026-10-25,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,325879,1780,9531808,20,75831841
+2026-10-25,VNA - Săn vé Tết 2027,Skin Ads,Desktop,689534,2652,14617059,23,87034877
+2026-10-25,VNA - Săn vé Tết 2027,Skin Ads,Mobile,481999,1570,10518220,15,48403271
+2026-10-25,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,344019,3591,12027838,55,243555410
+2026-10-25,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,194455,1820,6767391,34,146739808
+2026-10-26,VNA - Săn vé Tết 2027,Search Ads,Desktop,124044,5986,11836579,221,888846317
+2026-10-26,VNA - Săn vé Tết 2027,Search Ads,Mobile,80966,2895,7401143,102,422580276
+2026-10-26,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,502810,3717,14215448,36,148570049
+2026-10-26,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,283151,1541,7979426,15,61534191
+2026-10-26,VNA - Săn vé Tết 2027,Skin Ads,Desktop,634760,2082,14480989,17,54729094
+2026-10-26,VNA - Săn vé Tết 2027,Skin Ads,Mobile,446353,1157,10171712,9,28803523
+2026-10-26,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,298958,3183,10632053,41,136627849
+2026-10-26,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,204034,1847,7015341,26,87783978
+2026-10-27,VNA - Săn vé Tết 2027,Search Ads,Desktop,142344,6617,13854885,203,923711198
+2026-10-27,VNA - Săn vé Tết 2027,Search Ads,Mobile,83440,2921,7929842,107,387836474
+2026-10-27,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,518090,4030,14537638,48,207791512
+2026-10-27,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,274120,1630,7599847,21,79567036
+2026-10-27,VNA - Săn vé Tết 2027,Skin Ads,Desktop,734529,2320,15482210,22,68880609
+2026-10-27,VNA - Săn vé Tết 2027,Skin Ads,Mobile,397376,1207,8784546,10,41341979
+2026-10-27,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,318756,3640,11274078,49,202668014
+2026-10-27,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,207881,2080,7471527,36,128396771
+2026-10-28,VNA - Săn vé Tết 2027,Search Ads,Desktop,135385,5847,12654415,178,728758158
+2026-10-28,VNA - Săn vé Tết 2027,Search Ads,Mobile,77004,2923,7436162,86,323559953
+2026-10-28,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,535438,3430,15489665,34,113562837
+2026-10-28,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,317025,2037,8926738,25,96755212
+2026-10-28,VNA - Săn vé Tết 2027,Skin Ads,Desktop,660260,2113,14313060,20,77406139
+2026-10-28,VNA - Săn vé Tết 2027,Skin Ads,Mobile,449792,1394,10358924,13,44717112
+2026-10-28,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,323961,3483,11516352,50,172080775
+2026-10-28,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,209014,1954,7507598,32,136302368
+2026-10-29,VNA - Săn vé Tết 2027,Search Ads,Desktop,147141,7572,14423504,245,1073051231
+2026-10-29,VNA - Săn vé Tết 2027,Search Ads,Mobile,76366,3254,7493786,91,345556506
+2026-10-29,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,517182,3528,14249144,34,143535878
+2026-10-29,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,308674,1801,8333348,23,75093829
+2026-10-29,VNA - Săn vé Tết 2027,Skin Ads,Desktop,722074,2367,15758276,20,69193146
+2026-10-29,VNA - Săn vé Tết 2027,Skin Ads,Mobile,440493,1382,9756349,10,31168175
+2026-10-29,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,299154,3552,10652542,52,212652350
+2026-10-29,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,196275,1869,6713799,33,113789493
+2026-10-30,VNA - Săn vé Tết 2027,Search Ads,Desktop,136627,5983,13211232,184,811548012
+2026-10-30,VNA - Săn vé Tết 2027,Search Ads,Mobile,77208,2908,7407612,72,284384764
+2026-10-30,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,471492,3077,12879018,34,110119611
+2026-10-30,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,321843,1774,8903651,23,87406878
+2026-10-30,VNA - Săn vé Tết 2027,Skin Ads,Desktop,739042,2792,15563164,29,90064906
+2026-10-30,VNA - Săn vé Tết 2027,Skin Ads,Mobile,383776,1244,8748804,12,44151259
+2026-10-30,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,336877,3814,11336957,49,181053959
+2026-10-30,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,210112,2087,7598089,39,133306366
+2026-10-31,VNA - Săn vé Tết 2027,Search Ads,Desktop,167004,7240,16006377,227,923587190
+2026-10-31,VNA - Săn vé Tết 2027,Search Ads,Mobile,92126,3422,8605872,92,387615222
+2026-10-31,VNA - Săn vé Tết 2027,Newtab Banner,Desktop,520646,3731,15169845,42,170486911
+2026-10-31,VNA - Săn vé Tết 2027,Newtab Banner,Mobile,367858,2366,10028380,24,82917356
+2026-10-31,VNA - Săn vé Tết 2027,Skin Ads,Desktop,797198,2981,17811093,23,89577546
+2026-10-31,VNA - Săn vé Tết 2027,Skin Ads,Mobile,478236,1493,10794613,13,52755125
+2026-10-31,VNA - Săn vé Tết 2027,Native Newsfeed,Desktop,369262,4403,13085104,81,327956393
+2026-10-31,VNA - Săn vé Tết 2027,Native Newsfeed,Mobile,207841,1799,7232394,27,98181941
+</script>
+<script>
+(function(){
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const C = {s:[css('--s1'),css('--s2'),css('--s3'),css('--s4')], text:css('--text-2'), muted:css('--muted'), grid:css('--grid'), surface:css('--surface'), brand:css('--brand'), brandSoft:css('--brand-soft')};
+
+  // --- parse CSV ---
+  const lines = document.getElementById('raw').textContent.trim().split('\n');
+  const head = lines[0].split(',');
+  const rows = lines.slice(1).map(l => { const v=l.split(','); const o={}; head.forEach((h,i)=>o[h]=isNaN(v[i])||h==='date'?v[i]:+v[i]); return o; });
+
+  const sum = (arr,k) => arr.reduce((a,r)=>a+r[k],0);
+  const agg = arr => { const a={imp:sum(arr,'impressions'),clk:sum(arr,'clicks'),sp:sum(arr,'spend_vnd'),cv:sum(arr,'conversions'),rev:sum(arr,'revenue_vnd')}; a.ctr=a.clk/a.imp; a.cpc=a.sp/a.clk; a.cpa=a.sp/a.cv; a.cvr=a.cv/a.clk; a.roas=a.rev/a.sp; a.cpm=a.sp/a.imp*1000; return a; };
+  const groupBy = (k) => rows.reduce((m,r)=>((m[r[k]]=m[r[k]]||[]).push(r),m),{});
+
+  const nf = new Intl.NumberFormat('vi-VN');
+  const fmtN = n => nf.format(Math.round(n));
+  const fmtBig = n => n>=1e9 ? (n/1e9).toLocaleString('vi-VN',{maximumFractionDigits:2})+' tỷ' : n>=1e6 ? (n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr' : fmtN(n);
+  const fmtVnd = n => fmtBig(n)+' ₫';
+  const pct = (n,d=2) => (n*100).toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+  const x = n => n.toLocaleString('vi-VN',{maximumFractionDigits:1})+'x';
+
+  const T = agg(rows);
+  const dates = [...new Set(rows.map(r=>r.date))].sort();
+  const dlabel = d => d.slice(8,10)+'/'+d.slice(5,7);
+  document.getElementById('period').textContent = dlabel(dates[0])+' – '+dlabel(dates.at(-1))+'/'+dates[0].slice(0,4);
+  document.getElementById('title').textContent = rows[0].campaign.replace(' - ',' – ');
+
+  // --- KPI tiles ---
+  const kpis = [
+    ['Lượt hiển thị', fmtBig(T.imp), 'CPM '+fmtN(T.cpm)+' ₫'],
+    ['Lượt nhấp', fmtN(T.clk), 'CPC '+fmtN(T.cpc)+' ₫'],
+    ['CTR', pct(T.ctr), 'Tỷ lệ nhấp trung bình'],
+    ['Chi phí', fmtVnd(T.sp), 'Tổng ngân sách đã dùng'],
+    ['Lượt đặt vé', fmtN(T.cv), 'CVR '+pct(T.cvr)],
+    ['CPA', fmtN(T.cpa)+' ₫', 'Chi phí / lượt đặt vé'],
+    ['Doanh thu', fmtVnd(T.rev), 'Từ đặt vé trực tuyến', true],
+    ['ROAS', x(T.roas), 'Doanh thu / chi phí', true],
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(([l,v,n,h])=>`<div class="kpi${h?' hl':''}"><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join('');
+
+  // --- Chart defaults ---
+  Chart.defaults.font.family = '"Be Vietnam Pro", system-ui, sans-serif';
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = C.muted;
+  Chart.defaults.plugins.legend.display = false;
+  Object.assign(Chart.defaults.plugins.tooltip, {backgroundColor:'#1f1f1d', titleColor:'#fff', bodyColor:'#e9e8e4', padding:10, cornerRadius:8, boxPadding:4, usePointStyle:true});
+  const axis = (extra={}) => ({grid:{color:C.grid, drawTicks:false}, border:{display:false}, ticks:{padding:8}, ...extra});
+
+  const formats = [...new Set(rows.map(r=>r.ad_format))];
+  const byFmt = groupBy('ad_format');
+  const legend = (id, names, cols) => document.getElementById(id).innerHTML = names.map((n,i)=>`<span><i style="background:${cols[i]}"></i>${n}</span>`).join('');
+
+  // Clicks per day by format
+  legend('lg-clicks', formats, C.s);
+  new Chart(document.getElementById('c-clicks'), {
+    type:'line',
+    data:{labels:dates.map(dlabel), datasets: formats.map((f,i)=>({label:f, data:dates.map(d=>sum(byFmt[f].filter(r=>r.date===d),'clicks')), borderColor:C.s[i], backgroundColor:C.s[i], borderWidth:2, pointRadius:0, pointHoverRadius:5, pointHoverBorderColor:C.surface, pointHoverBorderWidth:2, tension:.3}))},
+    options:{maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
+      plugins:{tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmtN(c.parsed.y)}}},
+      scales:{x:axis({grid:{display:false}, ticks:{maxTicksLimit:8}}), y:axis({beginAtZero:true, ticks:{callback:v=>fmtBig(v)}})}}
+  });
+
+  // Conversions per day with flash-sale band
+  const convDaily = dates.map(d=>sum(rows.filter(r=>r.date===d),'conversions'));
+  const flash = {id:'flash', beforeDatasetsDraw(ch){const {ctx,chartArea:a,scales:{x:xs}}=ch; const i0=dates.indexOf('2026-10-15'), i1=dates.indexOf('2026-10-18'); const w=xs.getPixelForValue(1)-xs.getPixelForValue(0); ctx.save(); ctx.fillStyle=C.brandSoft; ctx.fillRect(xs.getPixelForValue(i0)-w/2, a.top, (i1-i0+1)*w, a.bottom-a.top); ctx.fillStyle=C.brand; ctx.font='600 11px "Be Vietnam Pro"'; ctx.textAlign='center'; ctx.fillText('Flash Sale', xs.getPixelForValue((i0+i1)/2), a.top+12); ctx.restore();}};
+  new Chart(document.getElementById('c-conv'), {
+    type:'bar',
+    data:{labels:dates.map(dlabel), datasets:[{label:'Lượt đặt vé', data:convDaily, backgroundColor:C.s[0], hoverBackgroundColor:C.s[0]+'cc', borderRadius:{topLeft:4,topRight:4}, borderSkipped:'bottom', barPercentage:.75, categoryPercentage:.9}]},
+    options:{maintainAspectRatio:false, plugins:{tooltip:{callbacks:{label:c=>' '+fmtN(c.parsed.y)+' lượt đặt vé'}}},
+      scales:{x:axis({grid:{display:false}, ticks:{maxTicksLimit:8}}), y:axis({beginAtZero:true})}},
+    plugins:[flash]
+  });
+
+  // Spend & ROAS by format (horizontal bars)
+  const F = formats.map(f=>({f, ...agg(byFmt[f])}));
+  const hbar = (id, vals, fmt, title) => new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels:formats, datasets:[{label:title, data:vals, backgroundColor:C.s, borderRadius:4, borderSkipped:'left', barPercentage:.7}]},
+    options:{indexAxis:'y', maintainAspectRatio:false, layout:{padding:{right:56}},
+      plugins:{tooltip:{callbacks:{label:c=>' '+title+': '+fmt(c.parsed.x)}}},
+      scales:{x:axis({beginAtZero:true, ticks:{callback:v=>fmt(v)}}), y:axis({grid:{display:false}, ticks:{color:C.text}})}},
+    plugins:[{id:'vlabels', afterDatasetsDraw(ch){const {ctx}=ch; ctx.save(); ctx.fillStyle=C.text; ctx.font='600 12px "Be Vietnam Pro"'; ctx.textBaseline='middle'; ch.getDatasetMeta(0).data.forEach((b,i)=>ctx.fillText(fmt(vals[i]), b.x+8, b.y)); ctx.restore();}}]
+  });
+  hbar('c-spend', F.map(r=>r.sp/1e6), v=>fmtN(v)+' tr', 'Chi phí');
+  hbar('c-roas', F.map(r=>r.roas), v=>x(v), 'ROAS');
+
+  // Detail table
+  const tr = (name, a, i) => `<tr><td>${i!=null?`<span class="sw" style="background:${C.s[i]}"></span>`:''}${name}</td><td>${fmtN(a.imp)}</td><td>${fmtN(a.clk)}</td><td>${pct(a.ctr)}</td><td>${fmtN(a.cpc)}</td><td>${fmtBig(a.sp)}</td><td>${fmtN(a.cv)}</td><td>${pct(a.cvr)}</td><td>${fmtN(a.cpa)}</td><td>${fmtBig(a.rev)}</td><td>${x(a.roas)}</td></tr>`;
+  const thead = `<thead><tr><th>Định dạng</th><th>Hiển thị</th><th>Nhấp</th><th>CTR</th><th>CPC (₫)</th><th>Chi phí (₫)</th><th>Đặt vé</th><th>CVR</th><th>CPA (₫)</th><th>Doanh thu (₫)</th><th>ROAS</th></tr></thead>`;
+  document.getElementById('tbl').innerHTML = thead + '<tbody>'+F.map((r,i)=>tr(r.f,r,i)).join('')+'</tbody><tfoot>'+tr('Tổng',T).replace(/<tr>/,'<tr>')+'</tfoot>';
+
+  // Device
+  const byDev = groupBy('device'); const devs = Object.keys(byDev); const D = devs.map(d=>({d,...agg(byDev[d])}));
+  const devCol = [C.s[0], C.s[1]];
+  legend('lg-dev', devs, devCol);
+  const mets = [['Hiển thị','imp'],['Nhấp','clk'],['Chi phí','sp'],['Đặt vé','cv'],['Doanh thu','rev']];
+  new Chart(document.getElementById('c-dev'), {
+    type:'bar',
+    data:{labels:mets.map(m=>m[0]), datasets:D.map((r,i)=>({label:r.d, data:mets.map(([,k])=>r[k]/T[k]*100), backgroundColor:devCol[i], borderColor:C.surface, borderWidth:{right:2,left:0,top:0,bottom:0}, borderSkipped:false, barPercentage:.7}))},
+    options:{indexAxis:'y', maintainAspectRatio:false,
+      plugins:{tooltip:{mode:'index', callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.x.toFixed(1)+'%'}}},
+      scales:{x:axis({stacked:true, max:100, ticks:{callback:v=>v+'%'}}), y:axis({stacked:true, grid:{display:false}, ticks:{color:C.text}})}}
+  });
+  document.getElementById('tbl-dev').innerHTML = `<thead><tr><th>Chỉ số</th>${D.map((r,i)=>`<th><span class="sw" style="background:${devCol[i]}"></span>${r.d}</th>`).join('')}</tr></thead><tbody>`+
+    [['CTR',r=>pct(r.ctr)],['CPC',r=>fmtN(r.cpc)+' ₫'],['CVR',r=>pct(r.cvr)],['CPA',r=>fmtN(r.cpa)+' ₫'],['ROAS',r=>x(r.roas)]].map(([n,f])=>`<tr><td>${n}</td>${D.map(r=>`<td>${f(r)}</td>`).join('')}</tr>`).join('')+'</tbody>';
+
+  // Insights (computed from data)
+  const best = [...F].sort((a,b)=>b.roas-a.roas)[0];
+  const reach = [...F].sort((a,b)=>b.imp-a.imp)[0];
+  const fsIdx = dates.map((d,i)=>i).filter(i=>dates[i]>='2026-10-15'&&dates[i]<='2026-10-18');
+  const fsAvg = fsIdx.reduce((a,i)=>a+convDaily[i],0)/fsIdx.length;
+  const otherAvg = convDaily.filter((v,i)=>!fsIdx.includes(i)).reduce((a,b)=>a+b,0)/(convDaily.length-fsIdx.length);
+  const ins = [
+    ['Hiệu quả nhất', `${best.f} dẫn đầu`, `ROAS đạt ${x(best.roas)} với CVR ${pct(best.cvr)}, đóng góp ${pct(best.rev/T.rev,0)} tổng doanh thu chỉ với ${pct(best.sp/T.sp,0)} ngân sách.`],
+    ['Độ phủ thương hiệu', `${reach.f} phủ rộng nhất`, `${fmtBig(reach.imp)} lượt hiển thị (${pct(reach.imp/T.imp,0)} tổng), CPM chỉ ${fmtN(reach.cpm)} ₫ – phù hợp mục tiêu nhận diện.`],
+    ['Flash Sale 15–18/10', `Đặt vé tăng ${pct(fsAvg/otherAvg-1,0)}`, `Trung bình ${fmtN(fsAvg)} lượt đặt vé/ngày so với ${fmtN(otherAvg)} các ngày còn lại.`],
+  ];
+  document.getElementById('insights').innerHTML = ins.map(([tag,t,p])=>`<div class="ins"><div class="tag">${tag}</div><div class="t">${t}</div><p>${p}</p></div>`).join('');
+})();
+</script>
+</body>
+</html>
